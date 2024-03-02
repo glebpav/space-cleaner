@@ -12,16 +12,10 @@ public class ShipObject extends SpaceObject {
         tx -= x + width / 2;
         ty -= y + height / 2;
 
-        double sqrtT = Math.sqrt(tx * tx + ty * ty);
-        velocityX = (int) (5 * tx / sqrtT);
-        velocityY = (int) (5 * ty / sqrtT);
-
-        System.out.println("sqrt - " + sqrtT);
-        System.out.println("vx - " + tx);
-        System.out.println("vy - " + ty);
+        velocityX = (int) (0.1 * tx);
+        velocityY = (int) (0.1 * ty);
 
         x += velocityX;
         y += velocityY;
-
     }
 }

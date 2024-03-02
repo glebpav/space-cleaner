@@ -6,24 +6,47 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.mygdx.game.GameSession;
 import com.mygdx.game.GameSettings;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.objects.ShipObject;
+import com.mygdx.game.objects.TrashObject;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 public class GameScreen extends ScreenAdapter {
 
     MyGdxGame myGdxGame;
+    GameSession session;
+
+    ArrayList<TrashObject> trashArray;
 
     ShipObject ship;
 
     public GameScreen(MyGdxGame myGdxGame) {
         this.myGdxGame = myGdxGame;
+        session = new GameSession();
+        trashArray = new ArrayList<>();
         ship = new ShipObject(GameSettings.SCREEN_WIDTH / 2 - GameSettings.SHIP_WIDTH / 2, 100);
+    }
+
+    @Override
+    public void show() {
+        session.beginSession();
     }
 
     @Override
     public void render(float delta) {
         handleInput();
+
+        if (session.hasToSpawnTrash()) {
+            TrashObject trash = new TrashObject();
+            trashArray.add(trash);
+        }
+
+        for (int i = 0; i < trashArray.size(); i++) trashArray.get(i).move();
+
         draw();
     }
 
@@ -42,6 +65,7 @@ public class GameScreen extends ScreenAdapter {
         ScreenUtils.clear(Color.BLACK);
 
         myGdxGame.batch.begin();
+        for (int i = 0; i < trashArray.size(); i++) trashArray.get(i).draw(myGdxGame.batch);
         ship.draw(myGdxGame.batch);
         myGdxGame.batch.end();
     }
