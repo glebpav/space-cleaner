@@ -33,4 +33,16 @@ public class SpaceObject {
     public void dispose() {
         texture.dispose();
     }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getWidth() {
+        return width;
+    }
 }

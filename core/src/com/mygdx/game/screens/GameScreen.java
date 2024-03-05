@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.GameSession;
 import com.mygdx.game.GameSettings;
 import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.objects.BulletObject;
 import com.mygdx.game.objects.ShipObject;
 import com.mygdx.game.objects.TrashObject;
 
@@ -21,6 +22,7 @@ public class GameScreen extends ScreenAdapter {
     GameSession session;
 
     ArrayList<TrashObject> trashArray;
+    ArrayList<BulletObject> bulletArray;
 
     ShipObject ship;
 
@@ -28,6 +30,7 @@ public class GameScreen extends ScreenAdapter {
         this.myGdxGame = myGdxGame;
         session = new GameSession();
         trashArray = new ArrayList<>();
+        bulletArray = new ArrayList<>();
         ship = new ShipObject(GameSettings.SCREEN_WIDTH / 2 - GameSettings.SHIP_WIDTH / 2, 100);
     }
 
@@ -45,7 +48,13 @@ public class GameScreen extends ScreenAdapter {
             trashArray.add(trash);
         }
 
-        for (int i = 0; i < trashArray.size(); i++) trashArray.get(i).move();
+        if (ship.hasToShoot()) {
+            BulletObject bullet = new BulletObject(ship.getX() + ship.getWidth() / 2, ship.getY());
+            bulletArray.add(bullet);
+        }
+
+        for (TrashObject trash : trashArray) trash.move();
+        for (BulletObject bullet : bulletArray) bullet.move();
 
         draw();
     }
@@ -65,7 +74,8 @@ public class GameScreen extends ScreenAdapter {
         ScreenUtils.clear(Color.BLACK);
 
         myGdxGame.batch.begin();
-        for (int i = 0; i < trashArray.size(); i++) trashArray.get(i).draw(myGdxGame.batch);
+        for (BulletObject bullet : bulletArray) bullet.draw(myGdxGame.batch);
+        for (TrashObject trash : trashArray) trash.draw(myGdxGame.batch);
         ship.draw(myGdxGame.batch);
         myGdxGame.batch.end();
     }

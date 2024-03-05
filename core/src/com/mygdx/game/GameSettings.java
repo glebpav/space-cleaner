@@ -17,7 +17,9 @@ public class GameSettings {
 
     // Physics settings
 
-    public static final int TRASH_VELOCITY = 10;
+    public static final int TRASH_VELOCITY = 6;
+    public static final int BULLET_VELOCITY = 30;
     public static final int TRASH_APPEARANCE_PERIOD = 2000;
+    public static final int SHIP_SHOOTING_COOL_DOWN = 1000;
 
 }
