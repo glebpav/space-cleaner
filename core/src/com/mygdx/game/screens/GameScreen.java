@@ -53,6 +53,33 @@ public class GameScreen extends ScreenAdapter {
             bulletArray.add(bullet);
         }
 
+        for (int i = 0; i < trashArray.size(); i++) {
+            for (int j = 0; j < bulletArray.size(); j++) {
+                if (trashArray.get(i).isHit(bulletArray.get(j))) {
+
+                    trashArray.get(i).getDamage(1);
+                    if (!trashArray.get(i).isAlive()) {
+                        trashArray.remove(i);
+                        i--;
+                    }
+
+                    bulletArray.remove(j);
+                    j--;
+
+                }
+            }
+
+            if (trashArray.get(i).isHit(ship)) {
+                ship.getDamage(1);
+                if (!ship.isAlive()) {
+                    System.out.println("end of game");
+                }
+
+                trashArray.remove(i);
+                i--;
+            }
+        }
+
         for (TrashObject trash : trashArray) trash.move();
         for (BulletObject bullet : bulletArray) bullet.move();
 

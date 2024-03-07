@@ -1,18 +1,18 @@
 package com.mygdx.game.objects;
 
 import com.badlogic.gdx.utils.TimeUtils;
-import com.mygdx.game.GameSession;
 import com.mygdx.game.GameSettings;
 
-import java.sql.Time;
 
 public class ShipObject extends SpaceObject {
 
+    int lifeLeft;
     long lastShootTime;
 
     public ShipObject(int x, int y) {
         super(x, y, GameSettings.SHIP_WIDTH, GameSettings.SHIP_HEIGHT, "textures/ship.png");
         lastShootTime = TimeUtils.millis();
+        lifeLeft = 3;
     }
 
     public void move(int tx, int ty) {
@@ -24,6 +24,14 @@ public class ShipObject extends SpaceObject {
 
         x += velocityX;
         y += velocityY;
+    }
+
+    public void getDamage(int damage) {
+        lifeLeft -= damage;
+    }
+
+    public boolean isAlive() {
+        return lifeLeft > 0;
     }
 
     public boolean hasToShoot() {
