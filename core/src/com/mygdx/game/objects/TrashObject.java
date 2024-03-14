@@ -15,7 +15,7 @@ public class TrashObject extends SpaceObject {
                 GameSettings.TRASH_HEIGHT,
                 "textures/trash.png");
         velocityX = 0;
-        lifeLeft = 2;
+        lifeLeft = 1;
         velocityY = -GameSettings.TRASH_VELOCITY;
     }
 
