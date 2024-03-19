@@ -34,6 +34,10 @@ public class ShipObject extends SpaceObject {
         return lifeLeft > 0;
     }
 
+    public int getLifeLeft() {
+        return lifeLeft;
+    }
+
     public boolean hasToShoot() {
         if (TimeUtils.millis() - lastShootTime >= GameSettings.SHIP_SHOOTING_COOL_DOWN) {
             lastShootTime = TimeUtils.millis();

@@ -8,9 +8,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.GameSession;
 import com.mygdx.game.GameSettings;
 import com.mygdx.game.MyGdxGame;
-import com.mygdx.game.compnents.ImageView;
-import com.mygdx.game.compnents.MovingBackgroundView;
-import com.mygdx.game.compnents.TextView;
+import com.mygdx.game.compnents.*;
 import com.mygdx.game.objects.BulletObject;
 import com.mygdx.game.objects.ShipObject;
 import com.mygdx.game.objects.TrashObject;
@@ -31,6 +29,8 @@ public class GameScreen extends ScreenAdapter {
     MovingBackgroundView backgroundView;
     ImageView topBlackOutView;
     TextView scoreCounterView;
+    ButtonView pauseButton;
+    LiveView liveView;
 
     public GameScreen(MyGdxGame myGdxGame) {
         this.myGdxGame = myGdxGame;
@@ -42,6 +42,10 @@ public class GameScreen extends ScreenAdapter {
         backgroundView = new MovingBackgroundView("textures/background.png");
         topBlackOutView = new ImageView(0, 1180, "textures/top_blackout.png");
         scoreCounterView = new TextView(50, 1215, myGdxGame.commonWhiteFont);
+        pauseButton = new ButtonView(605, 1200, 46, 54, "textures/pause_icon.png");
+        liveView = new LiveView(305, 1215);
+
+        liveView.setLiveLeft(ship.getLifeLeft());
     }
 
     @Override
@@ -64,6 +68,7 @@ public class GameScreen extends ScreenAdapter {
         }
 
         for (int i = 0; i < trashArray.size(); i++) {
+
             for (int j = 0; j < bulletArray.size(); j++) {
                 if (trashArray.get(i).isHit(bulletArray.get(j))) {
 
@@ -79,8 +84,9 @@ public class GameScreen extends ScreenAdapter {
                 }
             }
 
-            if (trashArray.get(i).isHit(ship)) {
+            if (i >= 0 && trashArray.get(i).isHit(ship)) {
                 ship.getDamage(1);
+                liveView.setLiveLeft(ship.getLifeLeft());
                 if (!ship.isAlive()) {
                     System.out.println("end of game");
                 }
@@ -98,6 +104,15 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void handleInput() {
+
+        if (Gdx.input.justTouched()) {
+            System.out.println("just touched");
+            Vector3 touch = myGdxGame.camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+            if (pauseButton.isHit(touch.x, touch.y)) {
+                System.out.println("Button is touched");
+                return;
+            }
+        }
 
         if (Gdx.input.isTouched()) {
             Vector3 touch = myGdxGame.camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
@@ -118,6 +133,8 @@ public class GameScreen extends ScreenAdapter {
         ship.draw(myGdxGame.batch);
         topBlackOutView.draw(myGdxGame.batch);
         scoreCounterView.draw(myGdxGame.batch, "score: " + 100);
+        pauseButton.draw(myGdxGame.batch);
+        liveView.draw(myGdxGame.batch);
         myGdxGame.batch.end();
     }
 

@@ -10,6 +10,7 @@ public class TextView {
     int x;
     int y;
     int height;
+    int width;
 
     BitmapFont bitmapFont;
 
@@ -20,13 +21,14 @@ public class TextView {
     }
 
     public void draw(SpriteBatch batch, String text) {
+        if (bitmapFont == null) return;
         GlyphLayout gl = new GlyphLayout(bitmapFont, text);
         height = (int) gl.height;
         bitmapFont.draw(batch, text, x, y + height);
     }
 
     public void dispose() {
-        bitmapFont.dispose();
+        if (bitmapFont != null) bitmapFont.dispose();
     }
 
 }
