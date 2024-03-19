@@ -5,6 +5,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.mygdx.game.GameScreenState;
 import com.mygdx.game.GameSession;
 import com.mygdx.game.GameSettings;
 import com.mygdx.game.MyGdxGame;
@@ -26,11 +27,19 @@ public class GameScreen extends ScreenAdapter {
 
     ShipObject ship;
 
+    // playing state ui
     MovingBackgroundView backgroundView;
     ImageView topBlackOutView;
     TextView scoreCounterView;
     ButtonView pauseButton;
     LiveView liveView;
+
+    // paused state ui
+    ImageView blackoutView;
+    TextView pauseTitleView;
+    ButtonView homeButtonView;
+    ButtonView resumeButtonView;
+
 
     public GameScreen(MyGdxGame myGdxGame) {
         this.myGdxGame = myGdxGame;
@@ -45,6 +54,29 @@ public class GameScreen extends ScreenAdapter {
         pauseButton = new ButtonView(605, 1200, 46, 54, "textures/pause_icon.png");
         liveView = new LiveView(305, 1215);
 
+        pauseTitleView = new TextView(284, 842, myGdxGame.largeWhiteFont);
+        blackoutView = new ImageView(
+                0, 0,
+                GameSettings.SCREEN_WIDTH,
+                GameSettings.SCREEN_HEIGHT,
+                "textures/blackout_full.png"
+        );
+        resumeButtonView = new ButtonView(
+                185, 680,
+                160, 70,
+                "textures/button_background_1.png",
+                myGdxGame.commonBlackFont,
+                "Continue"
+        );
+        homeButtonView = new ButtonView(
+                375, 680,
+                160, 70,
+                "textures/button_background_1.png",
+                myGdxGame.commonBlackFont,
+                "Home"
+        );
+
+
         liveView.setLiveLeft(ship.getLifeLeft());
     }
 
@@ -57,14 +89,18 @@ public class GameScreen extends ScreenAdapter {
     public void render(float delta) {
         handleInput();
 
-        if (session.hasToSpawnTrash()) {
-            TrashObject trash = new TrashObject();
-            trashArray.add(trash);
-        }
+        if (session.getState() == GameScreenState.PLAYING) {
 
-        if (ship.hasToShoot()) {
-            BulletObject bullet = new BulletObject(ship.getX() + ship.getWidth() / 2, ship.getY());
-            bulletArray.add(bullet);
+            if (session.hasToSpawnTrash()) {
+                TrashObject trash = new TrashObject();
+                trashArray.add(trash);
+            }
+
+            if (ship.hasToShoot()) {
+                BulletObject bullet = new BulletObject(ship.getX() + ship.getWidth() / 2, ship.getY());
+                bulletArray.add(bullet);
+            }
+
         }
 
         for (int i = 0; i < trashArray.size(); i++) {
@@ -80,6 +116,7 @@ public class GameScreen extends ScreenAdapter {
 
                     bulletArray.remove(j);
                     j--;
+                    break;
 
                 }
             }
@@ -96,9 +133,12 @@ public class GameScreen extends ScreenAdapter {
             }
         }
 
-        for (TrashObject trash : trashArray) trash.move();
-        for (BulletObject bullet : bulletArray) bullet.move();
-        backgroundView.move();
+        if (session.getState() == GameScreenState.PLAYING) {
+            for (TrashObject trash : trashArray) trash.move();
+            for (BulletObject bullet : bulletArray) bullet.move();
+            backgroundView.move();
+        }
+
 
         draw();
     }
@@ -109,12 +149,18 @@ public class GameScreen extends ScreenAdapter {
             System.out.println("just touched");
             Vector3 touch = myGdxGame.camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
             if (pauseButton.isHit(touch.x, touch.y)) {
-                System.out.println("Button is touched");
+                session.pauseSession();
                 return;
+            }
+            if (resumeButtonView.isHit(touch.x, touch.y)) {
+                session.resumeSession();
+            }
+            if (homeButtonView.isHit(touch.x, touch.y)) {
+                myGdxGame.setScreen(myGdxGame.menuScreen);
             }
         }
 
-        if (Gdx.input.isTouched()) {
+        if (session.getState() == GameScreenState.PLAYING && Gdx.input.isTouched()) {
             Vector3 touch = myGdxGame.camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
             ship.move((int) touch.x, (int) touch.y);
         }
@@ -135,6 +181,14 @@ public class GameScreen extends ScreenAdapter {
         scoreCounterView.draw(myGdxGame.batch, "score: " + 100);
         pauseButton.draw(myGdxGame.batch);
         liveView.draw(myGdxGame.batch);
+
+        if (session.getState() == GameScreenState.PAUSED) {
+            blackoutView.draw(myGdxGame.batch);
+            pauseTitleView.draw(myGdxGame.batch, "Pause");
+            homeButtonView.draw(myGdxGame.batch);
+            resumeButtonView.draw(myGdxGame.batch);
+        }
+
         myGdxGame.batch.end();
     }
 

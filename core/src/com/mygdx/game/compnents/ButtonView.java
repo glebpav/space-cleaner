@@ -34,6 +34,7 @@ public class ButtonView {
 
     public void draw(SpriteBatch batch) {
         imageView.draw(batch);
+
         if (textView != null) textView.draw(batch, text);
     }
 
