@@ -17,6 +17,8 @@ public class MyGdxGame extends Game {
 	public OrthographicCamera camera;
 	public SpriteBatch batch;
 
+	public AudioManager audioManager;
+
 	public GameScreen gameScreen;
 	public MenuScreen menuScreen;
 	public SettingsScreen settingsScreen;
@@ -24,12 +26,15 @@ public class MyGdxGame extends Game {
 	public BitmapFont largeWhiteFont;
 	public BitmapFont commonWhiteFont;
 	public BitmapFont commonBlackFont;
-	
+
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, GameSettings.SCREEN_WIDTH, GameSettings.SCREEN_HEIGHT);
+
+		audioManager = new AudioManager();
 
 		largeWhiteFont = FontBuilder.generate(48, Color.WHITE, "fonts/Montserrat-Bold.ttf");
 		commonWhiteFont = FontBuilder.generate(24, Color.WHITE, "fonts/Montserrat-Bold.ttf");
@@ -39,7 +44,10 @@ public class MyGdxGame extends Game {
 		menuScreen = new MenuScreen(this);
 		settingsScreen = new SettingsScreen(this);
 
-		setScreen(gameScreen);
+		setScreen(menuScreen);
+
+		audioManager.backgoundMusic.setVolume(0.3f);
+		audioManager.backgoundMusic.play();
 	}
 	
 	@Override

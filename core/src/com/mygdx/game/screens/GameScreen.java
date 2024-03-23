@@ -75,14 +75,19 @@ public class GameScreen extends ScreenAdapter {
                 myGdxGame.commonBlackFont,
                 "Home"
         );
-
-
-        liveView.setLiveLeft(ship.getLifeLeft());
     }
 
     @Override
     public void show() {
         session.beginSession();
+        restartGame();
+    }
+
+    private void restartGame() {
+        ship = new ShipObject(GameSettings.SCREEN_WIDTH / 2 - GameSettings.SHIP_WIDTH / 2, 100);
+        trashArray.clear();
+        bulletArray.clear();
+        liveView.setLiveLeft(ship.getLifeLeft());
     }
 
     @Override
@@ -99,6 +104,7 @@ public class GameScreen extends ScreenAdapter {
             if (ship.hasToShoot()) {
                 BulletObject bullet = new BulletObject(ship.getX() + ship.getWidth() / 2, ship.getY());
                 bulletArray.add(bullet);
+                myGdxGame.audioManager.shootSound.play();
             }
 
         }
@@ -114,6 +120,7 @@ public class GameScreen extends ScreenAdapter {
                         i--;
                     }
 
+                    myGdxGame.audioManager.explosionSound.play();
                     bulletArray.remove(j);
                     j--;
                     break;
@@ -146,7 +153,6 @@ public class GameScreen extends ScreenAdapter {
     private void handleInput() {
 
         if (Gdx.input.justTouched()) {
-            System.out.println("just touched");
             Vector3 touch = myGdxGame.camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
             if (pauseButton.isHit(touch.x, touch.y)) {
                 session.pauseSession();
