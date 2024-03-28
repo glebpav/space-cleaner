@@ -32,9 +32,19 @@ public class ButtonView {
         textView = null;
     }
 
-    public void draw(SpriteBatch batch) {
-        imageView.draw(batch);
+    public ButtonView(int x, int y, BitmapFont bitmapFont, String text) {
+        this.text = text;
+        textView = new TextView(x, y, bitmapFont);
+        imageView = null;
 
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void draw(SpriteBatch batch) {
+        if (imageView != null) imageView.draw(batch);
         if (textView != null) textView.draw(batch, text);
     }
 

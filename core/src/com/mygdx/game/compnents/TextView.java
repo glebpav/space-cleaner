@@ -30,5 +30,4 @@ public class TextView {
     public void dispose() {
         if (bitmapFont != null) bitmapFont.dispose();
     }
-
 }
