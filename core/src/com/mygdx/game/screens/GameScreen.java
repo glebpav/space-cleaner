@@ -104,7 +104,7 @@ public class GameScreen extends ScreenAdapter {
             if (ship.hasToShoot()) {
                 BulletObject bullet = new BulletObject(ship.getX() + ship.getWidth() / 2, ship.getY());
                 bulletArray.add(bullet);
-                myGdxGame.audioManager.shootSound.play();
+                if (myGdxGame.audioManager.isSoundOn) myGdxGame.audioManager.shootSound.play();
             }
 
         }
@@ -120,7 +120,7 @@ public class GameScreen extends ScreenAdapter {
                         i--;
                     }
 
-                    myGdxGame.audioManager.explosionSound.play();
+                    if (myGdxGame.audioManager.isSoundOn) myGdxGame.audioManager.explosionSound.play();
                     bulletArray.remove(j);
                     j--;
                     break;

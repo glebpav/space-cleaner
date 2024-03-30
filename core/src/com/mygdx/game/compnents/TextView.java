@@ -24,6 +24,7 @@ public class TextView {
         if (bitmapFont == null) return;
         GlyphLayout gl = new GlyphLayout(bitmapFont, text);
         height = (int) gl.height;
+        width = (int) gl.width;
         bitmapFont.draw(batch, text, x, y + height);
     }
 

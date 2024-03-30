@@ -45,9 +45,6 @@ public class MyGdxGame extends Game {
 		settingsScreen = new SettingsScreen(this);
 
 		setScreen(menuScreen);
-
-		audioManager.backgoundMusic.setVolume(0.3f);
-		audioManager.backgoundMusic.play();
 	}
 	
 	@Override

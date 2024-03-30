@@ -54,8 +54,17 @@ public class ButtonView {
     }
 
     public boolean isHit(float tx, float ty) {
-        return (tx > imageView.x && tx < imageView.x + imageView.width
-                && ty > imageView.y && ty < imageView.y + imageView.height);
+        if (imageView != null) {
+            return (tx > imageView.x && tx < imageView.x + imageView.width
+                    && ty > imageView.y && ty < imageView.y + imageView.height);
+        }
+
+        if (textView != null) {
+            return (tx > textView.x && tx < textView.x + textView.width
+                    && ty > textView.y && ty < textView.y + textView.height);
+        }
+
+        return false;
     }
 
 }
